@@ -111,9 +111,58 @@ function viewResSummary(event){
         liE.textContent=`${Product.all[i].productName} had a ${Product.all[i].clicks} vootes and was seen ${Product.all[i].views} views`
 
     }
+    createChartSummary();
 viewResult.removeEventListener('click',viewResSummary);
 }
 viewResult.addEventListener('click',viewResSummary);
+
+
+
+function createChartSummary() {
+  var productsArr = [];
+  var clicksArr = [];
+  var viewsArr = [];
+  for (var i = 0; i < Product.all.length; i++) {
+    productsArr.push(Product.all[i].productName);
+    viewsArr.push(Product.all[i].views);
+    clicksArr.push(Product.all[i].clicks);
+  }
+ 
+  var ctx = document.getElementById('barChart').getContext('2d');
+  var barChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productsArr,
+      datasets: [{
+        label: '# of clicks',
+        data: clicksArr,
+        backgroundColor:
+          'rgba(100, 200, 150, 0.2)',
+        borderColor:
+          'rgba(100, 200, 150, 1)',
+        borderWidth: 2
+      },
+      {
+        label: '# of Views',
+        data: viewsArr,
+        backgroundColor:
+          'rgba(200, 100, 150, 0.2)',
+        borderColor:
+          'rgba(200, 100, 150, 1)',
+        borderWidth: 3
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
 
 
 function randomNumber(min, max) {
