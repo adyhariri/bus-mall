@@ -38,7 +38,7 @@ for (let i = 0; i < names.length; i++) {
  item.getItemPath();
 }
 
-console.log(Product.all);
+//console.log(Product.all);
 
 
 
@@ -46,14 +46,14 @@ console.log(Product.all);
 function render() {
 
   do{ 
-    leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
-  middleProduct = Product.all[randomNumber(0, Product.all.length - 1)];
-  rightProduct = Product.all[randomNumber(0, Product.all.length - 1)]; }
+   leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+   middleProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+   rightProduct = Product.all[randomNumber(0, Product.all.length - 1)]; }
   while(leftProduct===middleProduct||leftProduct===rightProduct||middleProduct===rightProduct);
   
-  console.log(leftProduct);
-  console.log(middleProduct);
-  console.log(rightProduct);
+  // console.log(leftProduct);
+  // console.log(middleProduct);
+  // console.log(rightProduct);
 
   leftImage.setAttribute('src', leftProduct.imagePath);
   leftImage.setAttribute('alt', leftProduct.productName);
@@ -82,7 +82,7 @@ function handleClickonProduct(event) {
   if (totalClicks < 25) {
     if (event.target.id !== 'imagesSection') {
       totalClicks++;
-      console.log(totalClicks);
+      //console.log(totalClicks);
 
       leftProduct.views++;
       middleProduct.views++;
@@ -100,10 +100,38 @@ function handleClickonProduct(event) {
         rightProduct.clicks++;
       }
     
-      render();
     }
+    render();
+    sendToStorage();
+    
+  }
+
+
+  //createChartSummary();
+} 
+let productsArrLS ;
+function sendToStorage(){
+  let totalNumOfClicks = JSON.stringify(totalClicks);
+  localStorage.setItem('Number of clicks', totalNumOfClicks);
+
+  productsArrLS = JSON.stringify(Product.all);
+  localStorage.setItem('Products Array of objects', productsArrLS);
+
+  localStorage.setItem('Products Array of objects', JSON.stringify(Product.all));
+
+}
+
+function getFromStorage(){
+  let clicksTotalNumber = localStorage.getItem('Number of clicks');
+  totalClicks= JSON.parse(clicksTotalNumber);
   
-}} 
+  if(productsArrLS){
+    Product.all = JSON.parse(localStorage.getItem('Products Array of objects'));
+    render();
+  }
+}
+
+getFromStorage();
 function viewResSummary(event){
     for (let i = 0; i < Product.all.length; i++){
         let liE = document.createElement('li');
@@ -119,17 +147,17 @@ viewResult.addEventListener('click',viewResSummary);
 
 
 function createChartSummary() {
-  var productsArr = [];
-  var clicksArr = [];
-  var viewsArr = [];
-  for (var i = 0; i < Product.all.length; i++) {
+  let productsArr = [];
+  let clicksArr = [];
+  let viewsArr = [];
+  for (let i = 0; i < Product.all.length; i++) {
     productsArr.push(Product.all[i].productName);
     viewsArr.push(Product.all[i].views);
     clicksArr.push(Product.all[i].clicks);
   }
  
-  var ctx = document.getElementById('barChart').getContext('2d');
-  var barChart = new Chart(ctx, {
+  let ctx = document.getElementById('barChart').getContext('2d');
+  let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: productsArr,
